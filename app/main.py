@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from app.api.api_router import router
 from app.core.config import settings
+from app import enums
 
 # Base.metadata.create_all(bind=engine)
 
@@ -31,3 +32,16 @@ def get_application() -> FastAPI:
 app = get_application()
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+
+@app.get('/situpj/{lang}')
+def getenum (lang:enums.indSitPJ):
+    if (lang == enums.indSitPJ.extinto):
+        return {"Pessoa Extinta"}
+    elif (lang == enums.indSitPJ.fusao):    
+        return {"Pessoa com Fusão"}
+    elif (lang == enums.indSitPJ.situaNormal):
+        return {"Pessoa Em Situação Normal"}
+    elif (lang == enums.indSitPJ.cisao):
+        return {"Pessao Em Cisao"}
+    return {"Pessoa Incorporada"}
