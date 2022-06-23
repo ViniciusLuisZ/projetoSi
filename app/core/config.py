@@ -12,7 +12,8 @@ class Settings(BaseSettings):
     API_PREFIX = ''
     BACKEND_CORS_ORIGINS = ['*']
     DATABASE_URL = os.getenv('SQL_DATABASE_URL', '')
-    ACCESS_TOKEN_EXPIRE_SECONDS: int = 60 * 60 * 24 * 7  # Token expired after 7 days
+    ACCESS_TOKEN_EXPIRE_SECONDS: int = 60 * \
+        60 * 24 * 7  # Token expired after 7 days
     SECURITY_ALGORITHM = 'HS256'
 
 
