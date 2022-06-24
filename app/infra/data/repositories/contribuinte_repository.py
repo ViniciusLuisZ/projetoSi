@@ -2,7 +2,8 @@ from app.infra.data.db import database_r1000
 
 
 async def get_contribuintes():
-    # async for contribuinte in collection_reinf.find():
-    #     contribuintes.append(contribuinte_helper(contribuinte))
-    # return contribuintes
-    return database_r1000.Reinf.find()
+    data = []
+    for doc in database_r1000.Reinf.find():
+        doc['_id'] = str(doc['_id'])  # Convertendo _id para iterar cursor
+        data.append(doc)
+    return data

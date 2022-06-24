@@ -13,11 +13,10 @@ database_r1000 = client["R-1000"]
 
 
 def contribuinte_helper(contribuinte) -> dict:
+    print(contribuinte)
     return {
-        "id": contribuinte["id"],
-        "ideEvento": contribuinte["ideEvento"],
-        "ideContri": contribuinte["ideContri"],
-        "infoContri": contribuinte["infoContri"],
+        'id': contribuinte["_id"],
+        "evtInfoContri": contribuinte["evtInfoContri"],
     }
 
 
