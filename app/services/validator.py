@@ -1,0 +1,1 @@
+### esse script será usado para adicionar as regras de validação dos campos do reinf
