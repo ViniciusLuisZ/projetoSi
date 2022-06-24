@@ -27,3 +27,11 @@ def ResponseModel(data, message):
         "code": 200,
         "message": message,
     }
+
+def DeleteResponseModel(data, message):
+    return {
+        "quantity_find": data.matched_count,
+        "data": None,
+        "code": 200,
+        "message": message,
+    }
