@@ -4,7 +4,7 @@ from app import enums
 import sys
 from app.infra.data.db import ResponseModel
 
-from app.infra.data.repositories.contribuinte_repository import get_contribuintes
+from app.infra.data.repositories.contribuinte_repository import get_contribuintes, get_contribuentes_details
 # from app.domain.models.contribuente import ContribuinteQuerry
 
 router = APIRouter()
@@ -16,6 +16,14 @@ async def get_contribuints():
     if contribuintes:
         return ResponseModel(contribuintes, "Deu boa!")
     return ResponseModel(contribuintes, "Deu ruim")
+
+
+@router.get("/details/{id}")
+async def get_contribuents_details(id):
+    detalhes = await get_contribuentes_details(id)
+    if detalhes:
+        return ResponseModel(detalhes, "Deu boa!")
+    return ResponseModel(detalhes, "Deu ruim")
 
 @router.get('/situpj/{lang}')
 def getenum (lang:enums.indSitPJ):

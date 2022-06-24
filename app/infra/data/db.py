@@ -22,6 +22,7 @@ def contribuinte_helper(contribuinte) -> dict:
 
 def ResponseModel(data, message):
     return {
+        "quantity_find": len(data),
         "data": [data],
         "code": 200,
         "message": message,
