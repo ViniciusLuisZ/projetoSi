@@ -1,12 +1,7 @@
 from fastapi import APIRouter, Depends
-from app import enums
 
-import sys
 from app.infra.data.db import ResponseModel, DeleteResponseModel
-
-from app.infra.data.repositories.contribuinte_repository import get_contribuintes, get_contribuentes_details, delete_contribuente
-# from app.domain.models.contribuente import ContribuinteQuerry
-
+from app.infra.data.repositories.contribuinte_repository import get_contribuintes, get_contribuentes_details, delete_contribuente, get_situacoesPj
 router = APIRouter()
 
 
@@ -34,17 +29,11 @@ async def delete_contribuente_by_id(id):
     return DeleteResponseModel(resposta, "Deu ruim")
 
 
-@router.get('/situpj/{lang}')
-def getenum (lang:enums.indSitPJ):
-    if (lang == enums.indSitPJ.extinto):
-        return {"Pessoa Extinta"}
-    elif (lang == enums.indSitPJ.fusao):    
-        return {"Pessoa com Fusão"}
-    elif (lang == enums.indSitPJ.situaNormal):
-        return {"Pessoa Em Situação Normal"}
-    elif (lang == enums.indSitPJ.cisao):
-        return {"Pessao Em Cisao"}
-    return {"Pessoa Incorporada"}
+@router.get('/situacaopj')
+async def get_situacaopj():
+    situacoesPj = get_situacoesPj()
+    return situacoesPj
+
 
 # @router.post('/', response_model="teste")
 # def contribuente(param: ContribuinteQuerry = Depends()):
