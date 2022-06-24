@@ -6,3 +6,7 @@ async def get_contribuintes():
 
 async def get_contribuentes_details(id):
     return [x['evtInfoContri'] for x in database_r1000.Reinf.find({'evtInfoContri.id': {'$eq': id}})]
+
+async def delete_contribuente(id):
+    data = database_r1000.Reinf.update_one({'evtInfoContri.id': {'$eq': id}}, {'$set': {'evtInfoContri.infoContri.exclusao.idePeriodo':{'iniValid': 'algo', 'fimValid': 'outroalgo'}}})
+    return data
