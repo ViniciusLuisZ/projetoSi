@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends
-
+from fastapi import APIRouter
 from app.infra.data.db import ResponseModel, DeleteResponseModel
 from app.infra.data.repositories.contribuinte_repository import get_classContribuinte, get_contribuintes, get_contribuentes_details, delete_contribuente, get_situacoesPj
+from app.services.rabbitmq.producer import push_to_queue
 router = APIRouter()
 
 
@@ -43,3 +43,13 @@ async def get_classContrib():
 # @router.post('/', response_model="teste")
 # def contribuente(param: ContribuinteQuerry = Depends()):
 #     return
+
+# endpoint criado para teste da fila do rabbitmq
+
+
+@router.post('/send-message')
+async def send_message(message: object):
+    await push_to_queue(
+        {"message": message}
+    )
+    return {"status": "ok"}
