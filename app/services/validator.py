@@ -15,4 +15,13 @@ def validate_email(data):
     regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
     if not(re.search(regex,email)):
         raise app_exceptions.Invalidinput("Email inválido")
- 
+
+def validate_cpf(data):
+    cpf = data['infoContri']['inclusao']['infoCadastro']['contato']['cpfCtt']
+    if len(cpf) != 11:
+        raise app_exceptions.Invalidinput("CPF com tamanho inválido")
+    for i in range(9,11):
+        value = sum((cpf[num] * ((i+1) - num) for num in range(0, i)))
+        digit = ((value * 10) % 11) % 10
+        if digit != cpf[i]:
+            raise app_exceptions.Invalidinput("CPF inválido")
