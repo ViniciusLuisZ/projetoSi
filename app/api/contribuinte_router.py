@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 
 from app.infra.data.db import ResponseModel, DeleteResponseModel
-from app.infra.data.repositories.contribuinte_repository import get_contribuintes, get_contribuentes_details, delete_contribuente, get_situacoesPj
+from app.infra.data.repositories.contribuinte_repository import get_classContribuinte, get_contribuintes, get_contribuentes_details, delete_contribuente, get_situacoesPj
 router = APIRouter()
 
 
@@ -34,6 +34,11 @@ async def get_situacaopj():
     situacoesPj = get_situacoesPj()
     return situacoesPj
 
+
+@router.get('/classificacaoContribuinte')
+async def get_classContrib():
+    classificacoes = await get_classContribuinte()
+    return classificacoes
 
 # @router.post('/', response_model="teste")
 # def contribuente(param: ContribuinteQuerry = Depends()):
