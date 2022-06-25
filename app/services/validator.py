@@ -25,3 +25,26 @@ def validate_cpf(data):
         digit = ((value * 10) % 11) % 10
         if digit != cpf[i]:
             raise app_exceptions.Invalidinput("CPF inválido")
+
+
+def validate_foneCel(data):
+    foneCel = data['infoContri']['inclusao']['infoCadastro']['contato']['foneCel']
+
+    # regex para celulares com apenas números e mínimo de 11 dígitos (ddd + 9 + número)
+    exp = '^[1-9]{2}? ?(?:[2-8]|9[1-9])[0-9]{3}?[0-9]{4}$'
+
+    foneCel = re.findall(exp, foneCel)
+    if not foneCel:
+        raise app_exceptions.Invalidinput("Celular não aceito!")
+        
+    
+
+def validate_foneFixo(data):
+    foneFixo = data['infoContri']['inclusao']['infoCadastro']['contato']['foneFixo']
+
+    # regex para telefone fixo com apenas números e mínimo de 10 dígitos (ddd  + número)
+    exp = '^[1-9]{2}([2-8]{4})([0-9]{4})$'
+
+    foneFixo = re.findall(exp, foneFixo)
+    if not foneFixo:
+        raise app_exceptions.Invalidinput("Telefone Fixo não aceito!")
