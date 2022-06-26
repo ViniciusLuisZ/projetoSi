@@ -1,8 +1,8 @@
 from http import HTTPStatus
 from fastapi import APIRouter, Request, HTTPException
 from app.services import contribuente_validator
-from app.infra.data.db import ResponseModel, DeleteResponseModel
-from app.infra.data.repositories.contribuinte_repository import get_classContribuinte, get_contribuintes, get_contribuentes_details, delete_contribuente, get_situacoesPj
+from app.infra.data.db import ResponseModel, DeleteResponseModel, PostResponseModel
+from app.infra.data.repositories.contribuinte_repository import get_classContribuinte, get_contribuintes, get_contribuentes_details, delete_contribuente, get_situacoesPj, insert_contribuente
 import app.exceptions as app_exceptions
 
 router = APIRouter()
@@ -48,9 +48,15 @@ async def contribuente(info: Request):
     info_request = await info.json()
     try:
         contribuente_validator(info_request['evtInfoContri'])
-        return ResponseModel(info_request, "Deu boa!")
+        insert_contribuente(info_request['evtInfoContri'])
+        return PostResponseModel(info_request['evtInfoContri']['id'], "Deu boa!")
     except app_exceptions.InvalidInput as err:
         raise HTTPException(HTTPStatus.UNPROCESSABLE_ENTITY, detail={
             'type': app_exceptions.ErrorType.INVALID_INPUT.name,
+            'reason': str(err)
+        })
+    except app_exceptions.DatabaseError as err:
+        raise HTTPException(HTTPStatus.INTERNAL_SERVER_ERROR, detail={
+            'type': app_exceptions.ErrorType.SERVER_ERROR.name,
             'reason': str(err)
         })

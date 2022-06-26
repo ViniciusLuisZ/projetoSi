@@ -20,3 +20,7 @@ class InvalidInput(Exception):
             'reason': 'Data validation error',
             'errors': [{'msg': message}]
         }
+
+
+class DatabaseError(Exception):
+    """Exceção levantada por um erro ao se conectar ao banco de dados."""
