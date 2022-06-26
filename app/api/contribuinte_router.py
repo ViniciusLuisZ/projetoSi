@@ -1,8 +1,19 @@
 from http import HTTPStatus
 from fastapi import APIRouter, Request, HTTPException
 from app.services import contribuente_validator
-from app.infra.data.db import ResponseModel, DeleteResponseModel, PostResponseModel
-from app.infra.data.repositories.contribuinte_repository import get_classContribuinte, get_contribuintes, get_contribuentes_details, delete_contribuente, get_situacoesPj, insert_contribuente
+from app.infra.data.db import (
+    ResponseModel, 
+    DeleteResponseModel, 
+    PostResponseModel
+)
+from app.infra.data.repositories.contribuinte_repository import (
+    get_classContribuinte, 
+    get_contribuintes, 
+    get_contribuentes_details, 
+    delete_contribuente, 
+    get_situacoesPj, 
+    insert_contribuente
+)
 import app.exceptions as app_exceptions
 
 router = APIRouter()
