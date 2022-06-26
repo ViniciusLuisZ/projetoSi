@@ -1,7 +1,10 @@
-from fastapi import APIRouter, Depends
-
+from http import HTTPStatus
+from fastapi import APIRouter, Request, HTTPException
+from app.services import contribuente_validator
 from app.infra.data.db import ResponseModel, DeleteResponseModel
 from app.infra.data.repositories.contribuinte_repository import get_classContribuinte, get_contribuintes, get_contribuentes_details, delete_contribuente, get_situacoesPj
+import app.exceptions as app_exceptions
+
 router = APIRouter()
 
 
@@ -32,14 +35,22 @@ async def delete_contribuente_by_id(id):
 @router.get('/situacaopj')
 async def get_situacaopj():
     situacoesPj = get_situacoesPj()
-    return situacoesPj
+    return ResponseModel(situacoesPj, "Deu boa!")
 
 
 @router.get('/classificacaoContribuinte')
 async def get_classContrib():
     classificacoes = await get_classContribuinte()
-    return classificacoes
+    return ResponseModel(classificacoes, "Deu boa!")
 
-# @router.post('/', response_model="teste")
-# def contribuente(param: ContribuinteQuerry = Depends()):
-#     return
+@router.post('/')
+async def contribuente(info: Request):
+    info_request = await info.json()
+    try:
+        contribuente_validator(info_request['evtInfoContri'])
+        return ResponseModel(info_request, "Deu boa!")
+    except app_exceptions.InvalidInput as err:
+        raise HTTPException(HTTPStatus.UNPROCESSABLE_ENTITY, detail={
+            'type': app_exceptions.ErrorType.INVALID_INPUT.name,
+            'reason': str(err)
+        })
