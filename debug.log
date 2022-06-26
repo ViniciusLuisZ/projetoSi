@@ -1,0 +1,8 @@
+2022-06-22 20:03:59,762 [INFO] <pymongo.command_cursor.CommandCursor object at 0x7f40fb1403a0>
+2022-06-22 20:03:59,766 [INFO] Started server process [34177]
+2022-06-22 20:03:59,767 [INFO] Waiting for application startup.
+2022-06-22 20:03:59,767 [INFO] Application startup complete.
+2022-06-22 20:04:13,011 [INFO] Shutting down
+2022-06-22 20:04:13,112 [INFO] Waiting for application shutdown.
+2022-06-22 20:04:13,112 [INFO] Application shutdown complete.
+2022-06-22 20:04:13,113 [INFO] Finished server process [34177]
