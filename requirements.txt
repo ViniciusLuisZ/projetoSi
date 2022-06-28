@@ -1,5 +1,6 @@
 fastapi==0.78.0
-uvicorn==0.13.4
+uvicorn[standard]==0.17.4
 pymongo==3.12
 python-dotenv==0.20.0
 dnspython==2.2.1
+aiormq==6.3.3

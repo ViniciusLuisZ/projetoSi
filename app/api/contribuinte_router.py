@@ -15,7 +15,7 @@ from app.infra.data.repositories.contribuinte_repository import (
     insert_contribuente
 )
 import app.exceptions as app_exceptions
-
+from app.services.rabbitmq.producer import push_to_queue
 router = APIRouter()
 
 
@@ -71,3 +71,12 @@ async def contribuente(info: Request):
             'type': app_exceptions.ErrorType.SERVER_ERROR.name,
             'reason': str(err)
         })
+
+
+# endpoint criado para teste da fila do rabbitmq
+@router.post('/send-message')
+async def send_message(message: object):
+    await push_to_queue(
+        {"message": message}
+    )
+    return {"status": "ok"}
