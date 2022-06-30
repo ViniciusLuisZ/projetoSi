@@ -22,9 +22,9 @@ def validate_cpf(data):
         raise app_exceptions.InvalidInput("CPF com tamanho inválido")
     try:
         for i in range(9,11):
-            value = sum((cpf[num] * ((i+1) - num) for num in range(0, i)))
+            value = sum((int(cpf[num]) * ((i+1) - num) for num in range(0, i)))
             digit = ((value * 10) % 11) % 10
-            if digit != cpf[i]:
+            if str(digit) != cpf[i]:
                 raise app_exceptions.InvalidInput("CPF inválido")
     except Exception:
         raise app_exceptions.InvalidInput("CPF inválido")
