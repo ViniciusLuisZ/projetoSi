@@ -1,21 +1,21 @@
 from http import HTTPStatus
 from fastapi import APIRouter, Request, HTTPException
-from app.services import contribuente_validator
 from app.infra.data.db import (
-    ResponseModel, 
-    DeleteResponseModel, 
+    ResponseModel,
+    DeleteResponseModel,
     PostResponseModel
 )
 from app.infra.data.repositories.contribuinte_repository import (
-    get_classContribuinte, 
-    get_contribuintes, 
-    get_contribuentes_details, 
-    delete_contribuente, 
-    get_situacoesPj, 
+    get_classContribuinte,
+    get_contribuintes,
+    get_contribuentes_details,
+    delete_contribuente,
+    get_situacoesPj,
     insert_contribuente
 )
 import app.exceptions as app_exceptions
 from app.services.rabbitmq.producer import push_to_queue
+from app.services.validator import validate_contribuinte
 router = APIRouter()
 
 
@@ -54,11 +54,12 @@ async def get_classContrib():
     classificacoes = await get_classContribuinte()
     return ResponseModel(classificacoes, "Deu boa!")
 
+
 @router.post('/')
 async def contribuente(info: Request):
     info_request = await info.json()
     try:
-        contribuente_validator(info_request['evtInfoContri'])
+        validate_contribuinte(info_request['evtInfoContri'])
         insert_contribuente(info_request['evtInfoContri'])
         return PostResponseModel(info_request['evtInfoContri']['id'], "Deu boa!")
     except app_exceptions.InvalidInput as err:
