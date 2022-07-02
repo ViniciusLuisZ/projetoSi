@@ -35,3 +35,11 @@ def DeleteResponseModel(data, message):
         "code": 200,
         "message": message,
     }
+
+def PostResponseModel(id_contribuente, message):
+    return {
+        "quantity_inserted": 1,
+        "id_inserted": id_contribuente,
+        "code": 200,
+        "message": message
+    }

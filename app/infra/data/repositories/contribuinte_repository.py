@@ -1,6 +1,6 @@
 from app import enums
 from app.infra.data.db import database_r1000
-
+import app.exceptions as app_exceptions
 
 async def get_contribuintes():
     return [x['evtInfoContri'] for x in database_r1000.Reinf.find({'evtInfoContri.infoContri.inclusao': {'$ne': None}})]
@@ -34,3 +34,9 @@ async def get_classContribuinte():
         if(i != "_id"):
             dataFinal.append({int(i): data[0][i]})
     return dataFinal
+
+def insert_contribuente(evtInfoContri):
+    try:
+        resultado = database_r1000.Reinf.insert_one(evtInfoContri)
+    except Exception as err:
+        raise app_exceptions.DatabaseError(f'Database query error: {err}')
