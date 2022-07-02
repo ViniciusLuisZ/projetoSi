@@ -1,5 +1,5 @@
 # esse script será usado para adicionar as regras de validação dos campos do reinf
-from app.enums import tpInsc
+from app.enums import indSitPJ, tpInsc
 import app.exceptions as app_exceptions
 import re
 
@@ -54,8 +54,14 @@ def validate_cpf(cpf):
 def validate_nrInsc(data):
     tpInscricao = data['ideContri']['tpInsc']
     nrInsc = data['ideContri']['nrInsc']
+    indSitPessoaJuridica = data['infoContri']['inclusao']['infoCadastro']['indSitPJ']
+
     if(tpInscricao == tpInsc.cnpjTp):
-        validate_cnpj(nrInsc)
+        if(indSitPessoaJuridica == indSitPJ.incorporacao):
+            raise app_exceptions.InvalidInput(
+                "CNPJ não poderá pertencer a pessoa jurídica inapta")
+        else:
+            validate_cnpj(nrInsc)
     else:
         validate_cpf(nrInsc)
 
