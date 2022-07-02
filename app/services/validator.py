@@ -4,14 +4,6 @@ import app.exceptions as app_exceptions
 import re
 
 
-def validate_contribuinte(data):
-    validate_classTrib(data)
-    validate_emailCtt(data)
-    validate_cpfCtt(data)
-    validate_nrInsc(data)
-    validate_cnpjEFR(data)
-
-
 def validate_classTrib(data):
     if data['ideContri']['tpInsc'] == 2:
         if data['infoContri']['inclusao']['infoCadastro']['clasTrib'] not in [21, 22]:

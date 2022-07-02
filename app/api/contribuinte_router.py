@@ -14,8 +14,8 @@ from app.infra.data.repositories.contribuinte_repository import (
     insert_contribuente
 )
 import app.exceptions as app_exceptions
+from app.services import contribuente_validator
 from app.services.rabbitmq.producer import push_to_queue
-from app.services.validator import validate_contribuinte
 router = APIRouter()
 
 
@@ -59,7 +59,7 @@ async def get_classContrib():
 async def contribuente(info: Request):
     info_request = await info.json()
     try:
-        validate_contribuinte(info_request['evtInfoContri'])
+        contribuente_validator(info_request['evtInfoContri'])
         insert_contribuente(info_request['evtInfoContri'])
         return PostResponseModel(info_request['evtInfoContri']['id'], "Deu boa!")
     except app_exceptions.InvalidInput as err:
