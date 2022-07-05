@@ -149,3 +149,36 @@ def validate_email_softHouse(data):
 def validate_cnpj_softHouse(data):
     cnpj = data['cnpjSoftHouse']
     validate_cnpj(cnpj)
+
+
+
+# esse método valida as datas conferindo se estão no formato correto (YYYY-MM)
+# também verifica as datas para garantir que a data_fim seja maior que a data_inicio
+def iniValid_fimValid(data):
+    iniValid = data['evtInfoContri']['infoContri']['inclusao']['idePeriodo']['iniValid']
+    fimValid = data['evtInfoContri']['infoContri']['inclusao']['idePeriodo']['fimValid']
+
+    # regex para datas no formato (YYYY-MM)
+    exp = '^\d{4}\-(0?[1-9]|1[012])$'
+
+    iniValid = re.findall(exp, iniValid)
+    if not iniValid:
+        raise app_exceptions.Invalidinput("Data de início inválida")
+    fimValid = re.findall(exp, fimValid)
+    if not fimValid:
+        raise app_exceptions.Invalidinput("Data de fim inválida")
+
+    refIniValid = str(iniValid.split('-'))
+    refFimValid = str(fimValid.split('-'))
+
+    if refFimValid[0] < refIniValid[0]:
+        raise app_exceptions.Invalidinput('Ano de Data Fim não pode ser menor')
+    elif refFimValid[0] == refIniValid[0]:
+        if refFimValid[1] < refIniValid[1]:
+            raise app_exceptions.Invalidinput('Mês de Data Fim não pode ser menor')
+        elif refFimValid[1] == refIniValid[1]:
+            raise app_exceptions.Invalidinput('Datas não podem ser iguais')
+    
+
+
+        
