@@ -46,8 +46,8 @@ def validate_cpf(cpf):
 
 # método que verifica somente o que foi preenchido (*deve ser chamado primeiro para validação de telefones)
 def foneFixoOuCel(data):
-    foneFixo = data['evtInfoContri']['infoContri']['inclusao']['infoCadastro']['contato']['foneFixo']
-    foneCel = data['evtInfoContri']['infoContri']['inclusao']['infoCadastro']['contato']['foneCel']
+    foneFixo = data['infoCadastro']['contato']['foneFixo']
+    foneCel = data['infoCadastro']['contato']['foneCel']
 
     if foneCel:
         validate_foneCel(foneCel)
@@ -60,7 +60,7 @@ def foneFixoOuCel(data):
 
 #método que valida celular (se o campo tiver sido preenchido)
 def validate_foneCel(data):
-    foneCel = data['evtInfoContri']['infoContri']['inclusao']['infoCadastro']['contato']['foneCel']
+    foneCel = data['infoCadastro']['contato']['foneCel']
 
     # regex para celulares com apenas números e mínimo de 11 dígitos (ddd + 9 + número)
     exp = '^[1-9]{2}? ?(?:[2-8]|9[1-9])[0-9]{3}?[0-9]{4}$'
@@ -72,7 +72,7 @@ def validate_foneCel(data):
     
 #valida telefone fixo (se o campo tiver sido preenchido)
 def validate_foneFixo(data):
-    foneFixo = data['evtInfoContri']['infoContri']['inclusao']['infoCadastro']['contato']['foneFixo']
+    foneFixo = data['infoCadastro']['contato']['foneFixo']
 
     # regex para telefone fixo com apenas números e mínimo de 10 dígitos (ddd  + número)
     exp = '^[1-9]{2}([2-8]{4})([0-9]{4})$'
