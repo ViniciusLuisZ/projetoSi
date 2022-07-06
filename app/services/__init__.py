@@ -3,12 +3,13 @@ from app.services.validator import *
 
 def contribuente_validator(infos):
     validate_classTrib(infos)
-    validate_email(infos)
-    validate_cpf(infos)
+    validate_email(infos['infoContri']['inclusao']['infoCadastro']['contato']['email'])
+    validate_cpf(infos['infoContri']['inclusao']['infoCadastro']['contato']['cpfCtt'])
     foneFixoOuCel(infos)
-    validate_foneCel(infos)
-    validate_foneFixo(infos)
-    validate_emailCtt(infos)
-    validate_cpfCtt(infos)
     validate_nrInsc(infos)
-    validate_cnpjEFR(infos)
+
+def softhouse_validator(infos):
+    validate_cnpj(infos['cnpjSoftHouse'])
+    validate_foneFixo(infos['telefone'])
+    validate_email(infos['email'])
+
