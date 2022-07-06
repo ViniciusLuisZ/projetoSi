@@ -13,20 +13,10 @@ def validate_classTrib(data):
             raise app_exceptions.InvalidInput("clasTrib inválido")
 
 
-def validate_emailCtt(data):
-    email = data['infoContri']['inclusao']['infoCadastro']['contato']['email']
-    validate_email(email)
-
-
 def validate_email(email):
     regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
     if not(re.search(regex, email)):
         raise app_exceptions.InvalidInput("Email inválido")
-
-
-def validate_cpfCtt(data):
-    cpf = data['infoContri']['inclusao']['infoCadastro']['contato']['cpfCtt']
-    validate_cpf(cpf)
 
 
 def validate_cpf(cpf):
@@ -52,7 +42,7 @@ def foneFixoOuCel(data):
     if foneCel:
         validate_foneCel(foneCel)
     if foneFixo:
-        validate_foneFixo(foneFixo)
+        validate_foneFixo(foneFixo['infoCadastro']['contato']['foneFixo'])
     if ((not foneCel) and (not foneFixo)):
         raise app_exceptions.InvalidInput("É necessário informar pelo menos um telefone")
 
@@ -67,19 +57,17 @@ def validate_foneCel(data):
 
     foneCel = re.findall(exp, foneCel)
     if not foneCel:
-        raise app_exceptions.Invalidinput("Celular não aceito!")
+        raise app_exceptions.InvalidInput("Celular não aceito!")
         
     
 #valida telefone fixo (se o campo tiver sido preenchido)
-def validate_foneFixo(data):
-    foneFixo = data['infoCadastro']['contato']['foneFixo']
-
+def validate_foneFixo(foneFixo):
     # regex para telefone fixo com apenas números e mínimo de 10 dígitos (ddd  + número)
     exp = '^[1-9]{2}([2-8]{4})([0-9]{4})$'
 
     foneFixo = re.findall(exp, foneFixo)
     if not foneFixo:
-        raise app_exceptions.Invalidinput("Telefone Fixo não aceito!")
+        raise app_exceptions.InvalidInput("Telefone Fixo não aceito!")
 
 
 def validate_nrInsc(data):
@@ -95,12 +83,6 @@ def validate_nrInsc(data):
             validate_cnpj(nrInsc)
     else:
         validate_cpf(nrInsc)
-
-
-def validate_cnpjEFR(data):
-    cnpj = data['infoContri']['inclusao']['infoCadastro']['infoEFR']['cnpjEFR']
-    if(cnpj):
-        validate_cnpj(cnpj)
 
 
 def validate_cnpj(cnpj):
