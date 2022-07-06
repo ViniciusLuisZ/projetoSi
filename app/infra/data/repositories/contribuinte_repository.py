@@ -12,7 +12,7 @@ async def get_contribuentes_details(id):
 
 async def delete_contribuente(id):
     data = database_r1000.Reinf.update_one({'evtInfoContri.id': {'$eq': id}}, {'$set': {
-                                           'evtInfoContri.infoContri.exclusao.idePeriodo': {'iniValid': 'algo', 'fimValid': 'outroalgo'}}})
+                                            'evtInfoContri.infoContri.exclusao.idePeriodo': {'iniValid': 'algo', 'fimValid': 'outroalgo'}}})
     return data
 
 
@@ -38,5 +38,11 @@ async def get_classContribuinte():
 def insert_contribuente(evtInfoContri):
     try:
         resultado = database_r1000.Reinf.insert_one(evtInfoContri)
+    except Exception as err:
+        raise app_exceptions.DatabaseError(f'Database query error: {err}')
+
+def insert_softhouse(infoSofthouse):
+    try:
+        resultado = database_r1000.softHouse.insert_one(infoSofthouse)
     except Exception as err:
         raise app_exceptions.DatabaseError(f'Database query error: {err}')
