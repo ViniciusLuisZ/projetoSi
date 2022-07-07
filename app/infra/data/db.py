@@ -76,3 +76,12 @@ def PostSofthouseResponseModel(cnpj, message):
         "code": 200,
         "message": message
     }
+
+
+def PutSofthouseResponseModel(id, message):
+    return {
+        "quantity_updated": 1,
+        "id_updated": id,
+        "code": 200,
+        "message": message
+    }

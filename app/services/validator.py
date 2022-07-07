@@ -1,4 +1,5 @@
 # esse script será usado para adicionar as regras de validação dos campos do reinf
+from itertools import cycle
 from app.enums import indSitPJ, tpInsc
 import app.exceptions as app_exceptions
 import re
@@ -33,7 +34,6 @@ def validate_cpf(cpf):
         raise app_exceptions.InvalidInput("CPF inválido")
 
 
-
 # método que verifica somente o que foi preenchido (*deve ser chamado primeiro para validação de telefones)
 def foneFixoOuCel(data):
     foneFixo = data['infoCadastro']['contato']['foneFixo']
@@ -44,23 +44,22 @@ def foneFixoOuCel(data):
     if foneFixo:
         validate_foneFixo(foneFixo['infoCadastro']['contato']['foneFixo'])
     if ((not foneCel) and (not foneFixo)):
-        raise app_exceptions.InvalidInput("É necessário informar pelo menos um telefone")
+        raise app_exceptions.InvalidInput(
+            "É necessário informar pelo menos um telefone")
 
 
-
-#método que valida celular (se o campo tiver sido preenchido)
+# método que valida celular (se o campo tiver sido preenchido)
 def validate_foneCel(data):
-    foneCel = data['infoCadastro']['contato']['foneCel']
 
     # regex para celulares com apenas números e mínimo de 11 dígitos (ddd + 9 + número)
     exp = '^[1-9]{2}? ?(?:[2-8]|9[1-9])[0-9]{3}?[0-9]{4}$'
 
-    foneCel = re.findall(exp, foneCel)
+    foneCel = re.findall(exp, data)
     if not foneCel:
         raise app_exceptions.InvalidInput("Celular não aceito!")
-        
-    
-#valida telefone fixo (se o campo tiver sido preenchido)
+
+
+# valida telefone fixo (se o campo tiver sido preenchido)
 def validate_foneFixo(foneFixo):
     # regex para telefone fixo com apenas números e mínimo de 10 dígitos (ddd  + número)
     exp = '^[1-9]{2}([2-8]{4})([0-9]{4})$'
@@ -90,45 +89,17 @@ def validate_cnpj(cnpj):
     if (not cnpj) or (len(cnpj) < 14):
         raise app_exceptions.InvalidInput("CNPJ com tamanho inválido")
 
-    # Pega apenas os 12 primeiros dígitos do CNPJ e gera os 2 dígitos que faltam
-    inteiros = map(int, cnpj)
-    novo = inteiros[:12]
-
-    prod = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
-    while len(novo) < 14:
-        r = sum([x*y for (x, y) in zip(novo, prod)]) % 11
-        if r > 1:
-            f = 11 - r
-        else:
-            f = 0
-        novo.append(f)
-        prod.insert(0, 6)
-
-    # Se o número gerado coincidir com o número original, é válido
-    if novo != inteiros:
-        raise app_exceptions.InvalidInput("CNPJ inválido")
-
-
-def validate_softHouse(data):
-    validate_cnpj_softHouse(data)
-    validate_email_softHouse(data)
-    # Adicionar validação de telefone para softHouse
-
-
-def validate_email_softHouse(data):
-    email = data['email']
-    if(email):
-        validate_email(email)
-
-
-def validate_cnpj_softHouse(data):
-    cnpj = data['cnpjSoftHouse']
-    validate_cnpj(cnpj)
-
-
+    cnpj_r = cnpj[::-1]
+    for i in range(2, 0, -1):
+        cnpj_enum = zip(cycle(range(2, 10)), cnpj_r[i:])
+        dv = sum(map(lambda x: int(x[1]) * x[0], cnpj_enum)) * 10 % 11
+        if cnpj_r[i - 1:i] != str(dv % 10):
+            return False
 
 # esse método valida as datas conferindo se estão no formato correto (YYYY-MM)
 # também verifica as datas para garantir que a data_fim seja maior que a data_inicio
+
+
 def iniValid_fimValid(data):
     iniValid = data['idePeriodo']['iniValid']
     fimValid = data['idePeriodo']['fimValid']
@@ -150,9 +121,5 @@ def iniValid_fimValid(data):
         raise app_exceptions.Invalidinput('Ano de Data Fim não pode ser menor')
     elif refFimValid[0] == refIniValid[0]:
         if refFimValid[1] < refIniValid[1]:
-            raise app_exceptions.Invalidinput('Mês de Data Fim não pode ser menor')
-        
-    
-
-
-        
+            raise app_exceptions.Invalidinput(
+                'Mês de Data Fim não pode ser menor')

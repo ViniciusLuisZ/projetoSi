@@ -67,3 +67,12 @@ async def get_softhouse_details(id):
         item['_id'] = str(item['_id'])  # Convertendo _id para iterar cursor
         data.append(item)
     return data
+
+
+def update_softhouse(id, infoSofthouse):
+    try:
+        del(infoSofthouse['id'])
+        resultado = database_r1000.softHouse.update_one(
+            {"_id": ObjectId(id)}, {"$set": infoSofthouse})
+    except Exception as err:
+        raise app_exceptions.DatabaseError(f'Database query error: {err}')
