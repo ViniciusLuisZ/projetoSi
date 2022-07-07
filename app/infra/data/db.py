@@ -28,6 +28,14 @@ def ResponseModel(data, message):
         "message": message,
     }
 
+
+def ErrorResponseModel(message):
+    return {
+        "code": 400,
+        "message": message,
+    }
+
+
 def DeleteResponseModel(data, message):
     return {
         "quantity_find": data.matched_count,
@@ -36,6 +44,22 @@ def DeleteResponseModel(data, message):
         "message": message,
     }
 
+
+def DeleteSofthouseResponseModel(data, message):
+    return {
+        "id_deleted": data,
+        "code": 200,
+        "message": message,
+    }
+
+
+def ErrorDeleteSofthouseResponseModel(message):
+    return {
+        "code": 400,
+        "message": message,
+    }
+
+
 def PostResponseModel(id_contribuente, message):
     return {
         "quantity_inserted": 1,
@@ -43,6 +67,7 @@ def PostResponseModel(id_contribuente, message):
         "code": 200,
         "message": message
     }
+
 
 def PostSofthouseResponseModel(cnpj, message):
     return {
