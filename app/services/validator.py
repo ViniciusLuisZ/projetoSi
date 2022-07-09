@@ -5,12 +5,12 @@ import app.exceptions as app_exceptions
 import re
 
 
-def validate_classTrib(data):
-    if data['ideContri']['tpInsc'] == 2:
-        if data['infoContri']['inclusao']['infoCadastro']['clasTrib'] not in [21, 22]:
+def validate_classTrib(tpInsc, classTrib):
+    if tpInsc == 2:
+        if classTrib not in [21, 22]:
             raise app_exceptions.InvalidInput("clasTrib inválido")
-    if data['ideContri']['tpInsc'] == 1:
-        if data['infoContri']['inclusao']['infoCadastro']['clasTrib'] in [21, 22]:
+    if tpInsc == 1:
+        if classTrib in [21, 22]:
             raise app_exceptions.InvalidInput("clasTrib inválido")
 
 
@@ -42,7 +42,7 @@ def foneFixoOuCel(data):
     if foneCel:
         validate_foneCel(foneCel)
     if foneFixo:
-        validate_foneFixo(foneFixo['infoCadastro']['contato']['foneFixo'])
+        validate_foneFixo(foneFixo)
     if ((not foneCel) and (not foneFixo)):
         raise app_exceptions.InvalidInput(
             "É necessário informar pelo menos um telefone")
@@ -69,10 +69,7 @@ def validate_foneFixo(foneFixo):
         raise app_exceptions.InvalidInput("Telefone Fixo não aceito!")
 
 
-def validate_nrInsc(data):
-    tpInscricao = data['ideContri']['tpInsc']
-    nrInsc = data['ideContri']['nrInsc']
-    indSitPessoaJuridica = data['infoContri']['inclusao']['infoCadastro']['indSitPJ']
+def validate_nrInsc(tpInscricao, nrInsc, indSitPessoaJuridica):
 
     if(tpInscricao == tpInsc.cnpjTp):
         if(indSitPessoaJuridica == indSitPJ.incorporacao):

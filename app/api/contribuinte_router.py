@@ -1,6 +1,9 @@
+import copy
 from http import HTTPStatus
 from fastapi import APIRouter, Request, HTTPException
 from app.infra.data.db import (
+    ErrorResponseModel,
+    PutResponseModel,
     ResponseModel,
     DeleteResponseModel,
     PostResponseModel
@@ -11,10 +14,11 @@ from app.infra.data.repositories.contribuinte_repository import (
     get_contribuentes_details,
     delete_contribuente,
     get_situacoesPj,
-    insert_contribuente
+    insert_contribuente,
+    update_contribuinte
 )
 import app.exceptions as app_exceptions
-from app.services import contribuente_validator
+from app.services import contribuente_validator, put_contribuente_validator
 from app.services.rabbitmq.producer import push_to_queue
 router = APIRouter()
 
@@ -60,8 +64,31 @@ async def contribuente(info: Request):
     info_request = await info.json()
     try:
         contribuente_validator(info_request['evtInfoContri'])
-        insert_contribuente(info_request['evtInfoContri'])
+        insert_contribuente(info_request)
         return PostResponseModel(info_request['evtInfoContri']['id'], "Deu boa!")
+    except app_exceptions.InvalidInput as err:
+        raise HTTPException(HTTPStatus.UNPROCESSABLE_ENTITY, detail={
+            'type': app_exceptions.ErrorType.INVALID_INPUT.name,
+            'reason': str(err)
+        })
+    except app_exceptions.DatabaseError as err:
+        raise HTTPException(HTTPStatus.INTERNAL_SERVER_ERROR, detail={
+            'type': app_exceptions.ErrorType.SERVER_ERROR.name,
+            'reason': str(err)
+        })
+
+
+@router.put('/')
+async def put_contribuinte_by_evtInfoContri_id(info: Request):
+    info_request = await info.json()
+    id = copy.deepcopy(info_request['evtInfoContri']['id'])
+    try:
+        contribuinte = await get_contribuentes_details(id)
+        if(contribuinte):
+            put_contribuente_validator(info_request['evtInfoContri'])
+            update_contribuinte(id, info_request)
+            return PutResponseModel(id, "Deu boa!")
+        return ErrorResponseModel("Deu ruim")
     except app_exceptions.InvalidInput as err:
         raise HTTPException(HTTPStatus.UNPROCESSABLE_ENTITY, detail={
             'type': app_exceptions.ErrorType.INVALID_INPUT.name,
