@@ -1,5 +1,5 @@
 from app import enums
-from app.infra.data.db import database_r1000
+from app.infra.data.db import ErrorResponseModel, database_r1000
 import app.exceptions as app_exceptions
 from bson.objectid import ObjectId
 
@@ -47,7 +47,12 @@ def insert_contribuente(evtInfoContri):
 
 def insert_softhouse(infoSofthouse):
     try:
+        softhouse = database_r1000.softHouse.find_one(
+            {"cnpjsofthouse": infoSofthouse['cnpjsofthouse']})
+        if(softhouse):
+            return False
         resultado = database_r1000.softHouse.insert_one(infoSofthouse)
+        return str(resultado.inserted_id)
     except Exception as err:
         raise app_exceptions.DatabaseError(f'Database query error: {err}')
 
