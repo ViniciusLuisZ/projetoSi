@@ -28,7 +28,9 @@ async def softhouse(info: Request):
     try:
         softhouse_validator(info_request)
         id = insert_softhouse(info_request)
-        return PostSofthouseResponseModel(id, "Deu boa!")
+        if(id):
+            return PostSofthouseResponseModel(id, "Deu boa!")
+        return ErrorResponseModel("Deu ruim")
     except app_exceptions.InvalidInput as err:
         raise HTTPException(HTTPStatus.UNPROCESSABLE_ENTITY, detail={
             'type': app_exceptions.ErrorType.INVALID_INPUT.name,
