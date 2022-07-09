@@ -27,8 +27,8 @@ async def softhouse(info: Request):
     info_request = await info.json()
     try:
         softhouse_validator(info_request)
-        insert_softhouse(info_request)
-        return PostSofthouseResponseModel(info_request['cnpjsofthouse'], "Deu boa!")
+        id = insert_softhouse(info_request)
+        return PostSofthouseResponseModel(id, "Deu boa!")
     except app_exceptions.InvalidInput as err:
         raise HTTPException(HTTPStatus.UNPROCESSABLE_ENTITY, detail={
             'type': app_exceptions.ErrorType.INVALID_INPUT.name,
@@ -44,13 +44,14 @@ async def softhouse(info: Request):
 @router.put('/')
 async def put_softhouse_by_id(info: Request):
     info_request = await info.json()
-    id = copy.deepcopy(info_request['id'])
     try:
+        id = copy.deepcopy(info_request['id'])
         softhouse = await get_softhouse_details(id)
-        if(softhouse):
+        if(softhouse and softhouse[0]['cnpjsofthouse'] != info_request['cnpjsofthouse']):
             softhouse_validator(info_request)
             update_softhouse(id, info_request)
             return PutSofthouseResponseModel(id, "Deu boa!")
+        return ErrorResponseModel("Deu ruim")
     except app_exceptions.InvalidInput as err:
         raise HTTPException(HTTPStatus.UNPROCESSABLE_ENTITY, detail={
             'type': app_exceptions.ErrorType.INVALID_INPUT.name,

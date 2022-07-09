@@ -48,6 +48,7 @@ def insert_contribuente(evtInfoContri):
 def insert_softhouse(infoSofthouse):
     try:
         resultado = database_r1000.softHouse.insert_one(infoSofthouse)
+        return str(resultado.inserted_id)
     except Exception as err:
         raise app_exceptions.DatabaseError(f'Database query error: {err}')
 

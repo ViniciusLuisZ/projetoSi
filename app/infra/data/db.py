@@ -69,10 +69,10 @@ def PostResponseModel(id_contribuente, message):
     }
 
 
-def PostSofthouseResponseModel(cnpj, message):
+def PostSofthouseResponseModel(id, message):
     return {
         "quantity_inserted": 1,
-        "cnpj_softhouse": cnpj,
+        "id_inserted": id,
         "code": 200,
         "message": message
     }
