@@ -11,6 +11,8 @@ def contribuente_validator(infos):
     foneFixoOuCel(infos['infoContri']['inclusao'])
     validate_nrInsc(infos['ideContri']['tpInsc'], infos['ideContri']['nrInsc'],
                     infos['infoContri']['inclusao']['infoCadastro']['indSitPJ'])
+    iniValid_fimValid(infos['infoContri']['inclusao']['idePeriodo']['iniValid'],
+                      infos['infoContri']['inclusao']['idePeriodo']['fimValid'])
 
 
 def put_contribuente_validator(infos):
@@ -23,6 +25,10 @@ def put_contribuente_validator(infos):
     foneFixoOuCel(infos['infoContri']['alteracao'])
     validate_nrInsc(infos['ideContri']['tpInsc'], infos['ideContri']['nrInsc'],
                     infos['infoContri']['alteracao']['infoCadastro']['indSitPJ'])
+    iniValid_fimValid(infos['infoContri']['alteracao']['idePeriodo']['iniValid'],
+                      infos['infoContri']['alteracao']['idePeriodo']['fimValid'])
+    iniValid_fimValid(infos['infoContri']['alteracao']['infoCadastro']['novaValidade']['iniValid'],
+                      infos['infoContri']['alteracao']['infoCadastro']['novaValidade']['fimValid'])
 
 
 def softhouse_validator(infos):

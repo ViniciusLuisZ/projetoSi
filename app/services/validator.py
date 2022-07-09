@@ -97,9 +97,7 @@ def validate_cnpj(cnpj):
 # também verifica as datas para garantir que a data_fim seja maior que a data_inicio
 
 
-def iniValid_fimValid(data):
-    iniValid = data['idePeriodo']['iniValid']
-    fimValid = data['idePeriodo']['fimValid']
+def iniValid_fimValid(iniValid, fimValid):
 
     # regex para datas no formato (YYYY-MM)
     exp = '^\d{4}\-(0?[1-9]|1[012])$'
