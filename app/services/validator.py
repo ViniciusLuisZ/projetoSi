@@ -86,7 +86,7 @@ def validate_nrInsc(data):
 
 def validate_cnpj(cnpj):
     cnpj = ''.join(re.findall('\d', str(cnpj)))
-    if (not cnpj) or (len(cnpj) < 14):
+    if (not cnpj) or (len(cnpj) < 14) or (len(cnpj) > 14):
         raise app_exceptions.InvalidInput("CNPJ com tamanho inválido")
 
     cnpj_r = cnpj[::-1]
