@@ -49,7 +49,7 @@ async def put_softhouse_by_id(info: Request):
     try:
         id = copy.deepcopy(info_request['id'])
         softhouse = await get_softhouse_details(id)
-        if(softhouse and softhouse[0]['cnpjSoftHouse'] != info_request['cnpjSoftHouse']):
+        if(softhouse and softhouse[0]['cnpjSoftHouse'] == info_request['cnpjSoftHouse']):
             softhouse_validator(info_request)
             update_softhouse(id, info_request)
             return PutResponseModel(id, "Deu boa!")

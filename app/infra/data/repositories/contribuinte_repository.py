@@ -40,10 +40,6 @@ async def get_classContribuinte():
 
 def insert_contribuente(evtInfoContri):
     try:
-        # contribuinte = database_r1000.Reinf.find_one(
-        #     {'evtInfoContri.ideContri.tpInsc': {'$eq': evtInfoContri['ideContri.tpInsc']}})
-        # if(contribuinte):
-        #     return False
         resultado = database_r1000.Reinf.insert_one(evtInfoContri)
     except Exception as err:
         raise app_exceptions.DatabaseError(f'Database query error: {err}')
