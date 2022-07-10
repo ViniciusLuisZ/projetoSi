@@ -1,5 +1,6 @@
 import copy
 from http import HTTPStatus
+import uuid
 from fastapi import APIRouter, Request, HTTPException
 from app.infra.data.db import (
     ErrorResponseModel,
@@ -43,6 +44,8 @@ async def get_contribuents_details(id):
 async def delete_contribuinte_by_id(id):
     resposta = await delete_contribuinte(id)
     if resposta.matched_count > 0:
+        contribuinte = await get_contribuentes_details(id)
+        await push_to_queue(contribuinte[0])
         return DeleteResponseModel(resposta, "Deu boa!")
     return DeleteResponseModel(resposta, "Deu ruim")
 
@@ -63,8 +66,10 @@ async def get_classContrib():
 async def contribuinte(info: Request):
     info_request = await info.json()
     try:
-        contribuinte_validator(info_request['evtInfoContri'])
-        insert_contribuinte(info_request)
+        contribuente_validator(info_request['evtInfoContri'])
+        info_request['evtInfoContri']['id'] = str(uuid.uuid4())
+        insert_contribuente(info_request)
+        await push_to_queue(info_request['evtInfoContri'])
         return PostResponseModel(info_request['evtInfoContri']['id'], "Deu boa!")
     except app_exceptions.InvalidInput as err:
         raise HTTPException(HTTPStatus.UNPROCESSABLE_ENTITY, detail={
@@ -87,6 +92,7 @@ async def put_contribuinte_by_evtInfoContri_id(info: Request):
         if(contribuinte):
             put_contribuinte_validator(info_request['evtInfoContri'])
             update_contribuinte(id, info_request)
+            await push_to_queue(info_request['evtInfoContri'])
             return PutResponseModel(id, "Deu boa!")
         return ErrorResponseModel("Deu ruim")
     except app_exceptions.InvalidInput as err:
@@ -99,12 +105,3 @@ async def put_contribuinte_by_evtInfoContri_id(info: Request):
             'type': app_exceptions.ErrorType.SERVER_ERROR.name,
             'reason': str(err)
         })
-
-
-# endpoint criado para teste da fila do rabbitmq
-@router.post('/send-message')
-async def send_message(message: object):
-    await push_to_queue(
-        {"message": message}
-    )
-    return {"status": "ok"}
