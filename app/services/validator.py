@@ -5,12 +5,12 @@ import app.exceptions as app_exceptions
 import re
 
 
-def validate_classTrib(data):
-    if data['ideContri']['tpInsc'] == 2:
-        if data['infoContri']['inclusao']['infoCadastro']['clasTrib'] not in [21, 22]:
+def validate_classTrib(tpInsc, classTrib):
+    if tpInsc == 2:
+        if classTrib not in [21, 22]:
             raise app_exceptions.InvalidInput("clasTrib inválido")
-    if data['ideContri']['tpInsc'] == 1:
-        if data['infoContri']['inclusao']['infoCadastro']['clasTrib'] in [21, 22]:
+    if tpInsc == 1:
+        if classTrib in [21, 22]:
             raise app_exceptions.InvalidInput("clasTrib inválido")
 
 
@@ -35,26 +35,24 @@ def validate_cpf(cpf):
 
 
 # método que verifica somente o que foi preenchido (*deve ser chamado primeiro para validação de telefones)
-def foneFixoOuCel(data):
-    foneFixo = data['infoCadastro']['contato']['foneFixo']
-    foneCel = data['infoCadastro']['contato']['foneCel']
-
+def foneFixoOuCel(foneCel,foneFixo):
+    
     if foneCel:
         validate_foneCel(foneCel)
     if foneFixo:
-        validate_foneFixo(foneFixo['infoCadastro']['contato']['foneFixo'])
+        validate_foneFixo(foneFixo)
     if ((not foneCel) and (not foneFixo)):
         raise app_exceptions.InvalidInput(
             "É necessário informar pelo menos um telefone")
 
 
 # método que valida celular (se o campo tiver sido preenchido)
-def validate_foneCel(data):
+def validate_foneCel(foneCel):
 
     # regex para celulares com apenas números e mínimo de 11 dígitos (ddd + 9 + número)
     exp = '^[1-9]{2}? ?(?:[2-8]|9[1-9])[0-9]{3}?[0-9]{4}$'
 
-    foneCel = re.findall(exp, data)
+    foneCel = re.findall(exp, foneCel)
     if not foneCel:
         raise app_exceptions.InvalidInput("Celular não aceito!")
 
@@ -69,10 +67,7 @@ def validate_foneFixo(foneFixo):
         raise app_exceptions.InvalidInput("Telefone Fixo não aceito!")
 
 
-def validate_nrInsc(data):
-    tpInscricao = data['ideContri']['tpInsc']
-    nrInsc = data['ideContri']['nrInsc']
-    indSitPessoaJuridica = data['infoContri']['inclusao']['infoCadastro']['indSitPJ']
+def validate_nrInsc(tpInscricao, nrInsc, indSitPessoaJuridica):
 
     if(tpInscricao == tpInsc.cnpjTp):
         if(indSitPessoaJuridica == indSitPJ.incorporacao):
@@ -100,26 +95,31 @@ def validate_cnpj(cnpj):
 # também verifica as datas para garantir que a data_fim seja maior que a data_inicio
 
 
-def iniValid_fimValid(data):
-    iniValid = data['idePeriodo']['iniValid']
-    fimValid = data['idePeriodo']['fimValid']
+def iniValid_fimValid(iniValid, fimValid):
 
     # regex para datas no formato (YYYY-MM)
     exp = '^\d{4}\-(0?[1-9]|1[012])$'
 
-    iniValid = re.findall(exp, iniValid)
-    if not iniValid:
-        raise app_exceptions.Invalidinput("Data de início inválida")
-    fimValid = re.findall(exp, fimValid)
-    if not fimValid:
-        raise app_exceptions.Invalidinput("Data de fim inválida")
+    auxIni = iniValid
+    auxFim = fimValid
 
-    refIniValid = str(iniValid.split('-'))
-    refFimValid = str(fimValid.split('-'))
+    iniValid = bool(re.match(exp, iniValid))
+    if iniValid==False:
+        raise app_exceptions.InvalidInput("Data de início inválida")
+    fimValid = bool(re.match(exp, fimValid))
+    if fimValid==False:
+        raise app_exceptions.InvalidInput("Data de fim inválida")
+
+
+
+    refIniValid = (auxIni.split('-'))
+    refFimValid = (auxFim.split('-'))
+
+    
 
     if refFimValid[0] < refIniValid[0]:
-        raise app_exceptions.Invalidinput('Ano de Data Fim não pode ser menor')
+        raise app_exceptions.InvalidInput('Ano de Data Fim não pode ser menor')
     elif refFimValid[0] == refIniValid[0]:
         if refFimValid[1] < refIniValid[1]:
-            raise app_exceptions.Invalidinput(
+            raise app_exceptions.InvalidInput(
                 'Mês de Data Fim não pode ser menor')

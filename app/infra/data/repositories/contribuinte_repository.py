@@ -40,7 +40,19 @@ async def get_classContribuinte():
 
 def insert_contribuente(evtInfoContri):
     try:
+        # contribuinte = database_r1000.Reinf.find_one(
+        #     {'evtInfoContri.ideContri.tpInsc': {'$eq': evtInfoContri['ideContri.tpInsc']}})
+        # if(contribuinte):
+        #     return False
         resultado = database_r1000.Reinf.insert_one(evtInfoContri)
+    except Exception as err:
+        raise app_exceptions.DatabaseError(f'Database query error: {err}')
+
+
+def update_contribuinte(id, evtInfoContri):
+    try:
+        resultado = database_r1000.Reinf.update_one(
+            {'evtInfoContri.id': {'$eq': id}}, {"$set": evtInfoContri})
     except Exception as err:
         raise app_exceptions.DatabaseError(f'Database query error: {err}')
 
@@ -48,7 +60,7 @@ def insert_contribuente(evtInfoContri):
 def insert_softhouse(infoSofthouse):
     try:
         softhouse = database_r1000.softHouse.find_one(
-            {"cnpjsofthouse": infoSofthouse['cnpjsofthouse']})
+            {"cnpjSoftHouse": infoSofthouse['cnpjSoftHouse']})
         if(softhouse):
             return False
         resultado = database_r1000.softHouse.insert_one(infoSofthouse)

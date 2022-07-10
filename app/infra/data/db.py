@@ -78,7 +78,7 @@ def PostSofthouseResponseModel(id, message):
     }
 
 
-def PutSofthouseResponseModel(id, message):
+def PutResponseModel(id, message):
     return {
         "quantity_updated": 1,
         "id_updated": id,
