@@ -44,7 +44,7 @@ async def get_contribuents_details(id):
 async def delete_contribuinte_by_id(id):
     resposta = await delete_contribuinte(id)
     if resposta.matched_count > 0:
-        contribuinte = await get_contribuentes_details(id)
+        contribuinte = await get_contribuintes_details(id)
         await push_to_queue(contribuinte[0])
         return DeleteResponseModel(resposta, "Deu boa!")
     return DeleteResponseModel(resposta, "Deu ruim")
@@ -66,9 +66,9 @@ async def get_classContrib():
 async def contribuinte(info: Request):
     info_request = await info.json()
     try:
-        contribuente_validator(info_request['evtInfoContri'])
+        contribuinte_validator(info_request['evtInfoContri'])
         info_request['evtInfoContri']['id'] = str(uuid.uuid4())
-        insert_contribuente(info_request)
+        insert_contribuinte(info_request)
         await push_to_queue(info_request['evtInfoContri'])
         return PostResponseModel(info_request['evtInfoContri']['id'], "Deu boa!")
     except app_exceptions.InvalidInput as err:
