@@ -142,7 +142,7 @@ class infoContriScheme:
         self.exclusao = exclusao
 
 
-class ContribuenteQuery:
+class contribuinteQuery:
     def __init__(
         self,
         id: int = Query(),
