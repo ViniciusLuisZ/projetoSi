@@ -23,7 +23,8 @@ def put_contribuente_validator(infos):
                    ['infoCadastro']['contato']['email'])
     validate_cpf(infos['infoContri']['alteracao']
                  ['infoCadastro']['contato']['cpfCtt'])
-    foneFixoOuCel(infos['infoContri']['alteracao'])
+    foneFixoOuCel(infos['infoContri']['alteracao']['infoCadastro']['contato']['foneCel'],
+                infos['infoContri']['alteracao']['infoCadastro']['contato']['foneFixo'])
     validate_nrInsc(infos['ideContri']['tpInsc'], infos['ideContri']['nrInsc'],
                     infos['infoContri']['alteracao']['infoCadastro']['indSitPJ'])
     iniValid_fimValid(infos['infoContri']['alteracao']['idePeriodo']['iniValid'],
