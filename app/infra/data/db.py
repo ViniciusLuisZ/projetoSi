@@ -3,13 +3,6 @@ from app.core.config import settings
 client = MongoClient(settings.DATABASE_URL)
 database_r1000 = client["R-1000"]
 
-# Collections:
-# Tabela8
-# Reinf
-# softHouse
-
-
-# helpers
 
 
 def contribuinte_helper(contribuinte) -> dict:
@@ -60,10 +53,10 @@ def ErrorDeleteSofthouseResponseModel(message):
     }
 
 
-def PostResponseModel(id_contribuente, message):
+def PostResponseModel(id_contribuinte, message):
     return {
         "quantity_inserted": 1,
-        "id_inserted": id_contribuente,
+        "id_inserted": id_contribuinte,
         "code": 200,
         "message": message
     }

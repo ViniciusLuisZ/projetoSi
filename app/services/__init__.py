@@ -1,7 +1,7 @@
 from app.services.validator import *
 
 
-def contribuente_validator(infos):
+def contribuinte_validator(infos):
     validate_classTrib(infos['ideContri']['tpInsc'],
                        infos['infoContri']['inclusao']['infoCadastro']['clasTrib'])
     validate_email(infos['infoContri']['inclusao']
@@ -16,7 +16,7 @@ def contribuente_validator(infos):
                       infos['infoContri']['inclusao']['idePeriodo']['fimValid'])
 
 
-def put_contribuente_validator(infos):
+def put_contribuinte_validator(infos):
     validate_classTrib(infos['ideContri']['tpInsc'],
                        infos['infoContri']['alteracao']['infoCadastro']['clasTrib'])
     validate_email(infos['infoContri']['alteracao']

@@ -2,20 +2,28 @@ from app import enums
 from app.infra.data.db import ErrorResponseModel, database_r1000
 import app.exceptions as app_exceptions
 from bson.objectid import ObjectId
+from datetime import date
+
+today = date.today()
+today = today.strftime("%Y-%m")
+
 
 
 async def get_contribuintes():
     return [x['evtInfoContri'] for x in database_r1000.Reinf.find({'evtInfoContri.infoContri.inclusao': {'$ne': None}})]
 
 
-async def get_contribuentes_details(id):
+async def get_contribuintes_details(id):
     return [x['evtInfoContri'] for x in database_r1000.Reinf.find({'evtInfoContri.id': {'$eq': id}})]
 
 
-async def delete_contribuente(id):
+async def delete_contribuinte(id):
     data = database_r1000.Reinf.update_one({'evtInfoContri.id': {'$eq': id}}, {'$set': {
-        'evtInfoContri.infoContri.exclusao.idePeriodo': {'iniValid': 'algo', 'fimValid': 'outroalgo'}}})
+        'evtInfoContri.infoContri.exclusao.idePeriodo': {'iniValid': today, 'fimValid': today}}})
     return data
+
+
+
 
 
 def get_situacoesPj():
@@ -38,7 +46,7 @@ async def get_classContribuinte():
     return dataFinal
 
 
-def insert_contribuente(evtInfoContri):
+def insert_contribuinte(evtInfoContri):
     try:
         # contribuinte = database_r1000.Reinf.find_one(
         #     {'evtInfoContri.ideContri.tpInsc': {'$eq': evtInfoContri['ideContri.tpInsc']}})

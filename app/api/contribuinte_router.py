@@ -11,14 +11,14 @@ from app.infra.data.db import (
 from app.infra.data.repositories.contribuinte_repository import (
     get_classContribuinte,
     get_contribuintes,
-    get_contribuentes_details,
-    delete_contribuente,
+    get_contribuintes_details,
+    delete_contribuinte,
     get_situacoesPj,
-    insert_contribuente,
+    insert_contribuinte,
     update_contribuinte
 )
 import app.exceptions as app_exceptions
-from app.services import contribuente_validator, put_contribuente_validator
+from app.services import contribuinte_validator, put_contribuinte_validator
 from app.services.rabbitmq.producer import push_to_queue
 router = APIRouter()
 
@@ -33,15 +33,15 @@ async def get_contribuints():
 
 @router.get("/details/{id}")
 async def get_contribuents_details(id):
-    detalhes = await get_contribuentes_details(id)
+    detalhes = await get_contribuintes_details(id)
     if detalhes:
         return ResponseModel(detalhes, "Deu boa!")
     return ResponseModel(detalhes, "Deu ruim")
 
 
 @router.delete('/{id}')
-async def delete_contribuente_by_id(id):
-    resposta = await delete_contribuente(id)
+async def delete_contribuinte_by_id(id):
+    resposta = await delete_contribuinte(id)
     if resposta.matched_count > 0:
         return DeleteResponseModel(resposta, "Deu boa!")
     return DeleteResponseModel(resposta, "Deu ruim")
@@ -60,11 +60,11 @@ async def get_classContrib():
 
 
 @router.post('/')
-async def contribuente(info: Request):
+async def contribuinte(info: Request):
     info_request = await info.json()
     try:
-        contribuente_validator(info_request['evtInfoContri'])
-        insert_contribuente(info_request)
+        contribuinte_validator(info_request['evtInfoContri'])
+        insert_contribuinte(info_request)
         return PostResponseModel(info_request['evtInfoContri']['id'], "Deu boa!")
     except app_exceptions.InvalidInput as err:
         raise HTTPException(HTTPStatus.UNPROCESSABLE_ENTITY, detail={
@@ -83,9 +83,9 @@ async def put_contribuinte_by_evtInfoContri_id(info: Request):
     info_request = await info.json()
     id = copy.deepcopy(info_request['evtInfoContri']['id'])
     try:
-        contribuinte = await get_contribuentes_details(id)
+        contribuinte = await get_contribuintes_details(id)
         if(contribuinte):
-            put_contribuente_validator(info_request['evtInfoContri'])
+            put_contribuinte_validator(info_request['evtInfoContri'])
             update_contribuinte(id, info_request)
             return PutResponseModel(id, "Deu boa!")
         return ErrorResponseModel("Deu ruim")
