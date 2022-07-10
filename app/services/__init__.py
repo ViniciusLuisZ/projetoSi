@@ -8,7 +8,8 @@ def contribuente_validator(infos):
                    ['infoCadastro']['contato']['email'])
     validate_cpf(infos['infoContri']['inclusao']
                  ['infoCadastro']['contato']['cpfCtt'])
-    foneFixoOuCel(infos['infoContri']['inclusao'])
+    foneFixoOuCel(infos['infoContri']['inclusao']['infoCadastro']['contato']['foneCel'],
+                infos['infoContri']['inclusao']['infoCadastro']['contato']['foneFixo'])
     validate_nrInsc(infos['ideContri']['tpInsc'], infos['ideContri']['nrInsc'],
                     infos['infoContri']['inclusao']['infoCadastro']['indSitPJ'])
     iniValid_fimValid(infos['infoContri']['inclusao']['idePeriodo']['iniValid'],

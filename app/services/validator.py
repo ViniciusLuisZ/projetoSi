@@ -35,10 +35,8 @@ def validate_cpf(cpf):
 
 
 # método que verifica somente o que foi preenchido (*deve ser chamado primeiro para validação de telefones)
-def foneFixoOuCel(data):
-    foneFixo = data['infoCadastro']['contato']['foneFixo']
-    foneCel = data['infoCadastro']['contato']['foneCel']
-
+def foneFixoOuCel(foneCel,foneFixo):
+    
     if foneCel:
         validate_foneCel(foneCel)
     if foneFixo:
@@ -49,12 +47,12 @@ def foneFixoOuCel(data):
 
 
 # método que valida celular (se o campo tiver sido preenchido)
-def validate_foneCel(data):
+def validate_foneCel(foneCel):
 
     # regex para celulares com apenas números e mínimo de 11 dígitos (ddd + 9 + número)
     exp = '^[1-9]{2}? ?(?:[2-8]|9[1-9])[0-9]{3}?[0-9]{4}$'
 
-    foneCel = re.findall(exp, data)
+    foneCel = re.findall(exp, foneCel)
     if not foneCel:
         raise app_exceptions.InvalidInput("Celular não aceito!")
 
@@ -102,19 +100,26 @@ def iniValid_fimValid(iniValid, fimValid):
     # regex para datas no formato (YYYY-MM)
     exp = '^\d{4}\-(0?[1-9]|1[012])$'
 
-    iniValid = re.findall(exp, iniValid)
-    if not iniValid:
-        raise app_exceptions.Invalidinput("Data de início inválida")
-    fimValid = re.findall(exp, fimValid)
-    if not fimValid:
-        raise app_exceptions.Invalidinput("Data de fim inválida")
+    auxIni = iniValid
+    auxFim = fimValid
 
-    refIniValid = str(iniValid.split('-'))
-    refFimValid = str(fimValid.split('-'))
+    iniValid = bool(re.match(exp, iniValid))
+    if iniValid==False:
+        raise app_exceptions.InvalidInput("Data de início inválida")
+    fimValid = bool(re.match(exp, fimValid))
+    if fimValid==False:
+        raise app_exceptions.InvalidInput("Data de fim inválida")
+
+
+
+    refIniValid = (auxIni.split('-'))
+    refFimValid = (auxFim.split('-'))
+
+    
 
     if refFimValid[0] < refIniValid[0]:
-        raise app_exceptions.Invalidinput('Ano de Data Fim não pode ser menor')
+        raise app_exceptions.InvalidInput('Ano de Data Fim não pode ser menor')
     elif refFimValid[0] == refIniValid[0]:
         if refFimValid[1] < refIniValid[1]:
-            raise app_exceptions.Invalidinput(
+            raise app_exceptions.InvalidInput(
                 'Mês de Data Fim não pode ser menor')
