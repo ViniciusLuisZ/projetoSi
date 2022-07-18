@@ -1,4 +1,4 @@
-# projetoSi
+# Backend app for event R-1000 
 
 Note: Please someone update this Readme
 
