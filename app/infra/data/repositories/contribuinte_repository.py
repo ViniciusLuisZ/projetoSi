@@ -8,7 +8,6 @@ today = date.today()
 today = today.strftime("%Y-%m")
 
 
-
 async def get_contribuintes():
     return [x['evtInfoContri'] for x in database_r1000.Reinf.find({'evtInfoContri.infoContri.inclusao': {'$ne': None}})]
 
@@ -21,9 +20,6 @@ async def delete_contribuinte(id):
     data = database_r1000.Reinf.update_one({'evtInfoContri.id': {'$eq': id}}, {'$set': {
         'evtInfoContri.infoContri.exclusao.idePeriodo': {'iniValid': today, 'fimValid': today}}})
     return data
-
-
-
 
 
 def get_situacoesPj():
@@ -48,7 +44,12 @@ async def get_classContribuinte():
 
 def insert_contribuinte(evtInfoContri):
     try:
+        contribuinte = database_r1000.Reinf.find_one(
+            {'evtInfoContri.ideContri.nrInsc': {'$eq': evtInfoContri['evtInfoContri']['ideContri']['nrInsc']}})
+        if contribuinte:
+            return False
         resultado = database_r1000.Reinf.insert_one(evtInfoContri)
+        return True
     except Exception as err:
         raise app_exceptions.DatabaseError(f'Database query error: {err}')
 

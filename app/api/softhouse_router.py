@@ -29,8 +29,8 @@ async def softhouse(info: Request):
         softhouse_validator(info_request)
         id = insert_softhouse(info_request)
         if(id):
-            return PostSofthouseResponseModel(id, "Deu boa!")
-        return ErrorResponseModel("Deu ruim")
+            return PostSofthouseResponseModel(id, "Sucesso!")
+        return ErrorResponseModel("Ocorreu um erro!")
     except app_exceptions.InvalidInput as err:
         raise HTTPException(HTTPStatus.UNPROCESSABLE_ENTITY, detail={
             'type': app_exceptions.ErrorType.INVALID_INPUT.name,
@@ -52,8 +52,8 @@ async def put_softhouse_by_id(info: Request):
         if(softhouse and softhouse[0]['cnpjSoftHouse'] == info_request['cnpjSoftHouse']):
             softhouse_validator(info_request)
             update_softhouse(id, info_request)
-            return PutResponseModel(id, "Deu boa!")
-        return ErrorResponseModel("Deu ruim")
+            return PutResponseModel(id, "Sucesso!")
+        return ErrorResponseModel("Ocorreu um erro!")
     except app_exceptions.InvalidInput as err:
         raise HTTPException(HTTPStatus.UNPROCESSABLE_ENTITY, detail={
             'type': app_exceptions.ErrorType.INVALID_INPUT.name,
@@ -70,13 +70,13 @@ async def put_softhouse_by_id(info: Request):
 async def get_softhouse_by_id(id):
     softhouse = await get_softhouse_details(id)
     if softhouse:
-        return ResponseModel(softhouse, "Deu boa!")
-    return ErrorResponseModel("Deu ruim")
+        return ResponseModel(softhouse, "Sucesso!")
+    return ErrorResponseModel("Ocorreu um erro!")
 
 
 @router.delete('/{id}')
 async def delete_softhouse_by_id(id):
     deleted_softhouse = await delete_softhouse(id)
     if (deleted_softhouse):
-        return DeleteSofthouseResponseModel(id, "Deu boa!")
+        return DeleteSofthouseResponseModel(id, "Sucesso!")
     return ErrorDeleteSofthouseResponseModel("Ocorreu um erro ao tentar deletar o id: {0}".format(id))
